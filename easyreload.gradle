@@ -1,0 +1,121 @@
+class EasyReloadGradle implements Plugin<Project>{
+    void apply(Project project) {
+        project.task('buildAndPost') {
+            dependsOn project.tasks.build
+
+            doLast {
+                System.out.println(project.serverDir);
+                File builtFile = project.tasks.jar.archiveFile.get().asFile;
+                PostBuildAction action = new PostBuildAction(builtFile, project.serverDir, project.shouldRestart);
+                action.performPostBuildAction();
+            }
+        }
+
+        project.tasks.build.finalizedBy('buildAndPost')
+    }
+}
+
+apply plugin: EasyReloadGradle
+
+class PostBuildAction{
+
+    private final boolean shouldRestart;
+    private final File builtFile;
+    private final String serverDirectory;
+
+    public PostBuildAction(File builtFile, String serverDirectory, boolean shouldRestart){
+        this.builtFile = builtFile;
+        this.serverDirectory = serverDirectory;
+        this.shouldRestart = shouldRestart;
+    }
+
+    public PostBuildAction(File builtFile, String serverDirectory, String shouldRestart){
+        this(builtFile, serverDirectory, determineShouldRestart(shouldRestart));
+    }
+
+    public void performPostBuildAction(){
+        System.out.println("Starting Post Build Tasks!");
+        System.out.println("Server dir: " + serverDirectory);
+        System.out.println("Built File dir: " + builtFile.getAbsolutePath());
+
+        //Prepare for copying the jar
+        System.out.println("Copying the built artifact...");
+        String finalName = serverDirectory + "\\plugins\\" + builtFile.getName();
+        File to = new File(finalName);
+        to.createNewFile();
+
+        copyFile(this.builtFile, to);
+
+        //Call the reload on the server
+        System.out.println("Calling the " + (shouldRestart ? "restart" : "reload") + " on the server...");
+        callReload();
+    }
+
+    private static determineShouldRestart(String shouldRestart){
+        boolean sr = false;
+        if(shouldRestart.toLowerCase().equals("true")){
+            sr = true;
+        } else if(shouldRestart.toLowerCase().equals("false")){
+            sr = false;
+        }else {
+            throw new IllegalArgumentException("The value of shouldRestart: " + shouldRestart + ", is invalid!");
+        }
+
+        return sr;
+    }
+
+    private void callReload(){
+        Socket reloadSocket = null;
+    
+        int portRangeStart = 12121 + (shouldRestart ? 5 : 0);
+        int port = portRangeStart;
+        
+        int portRange = 5; 
+        boolean foundPort = false;
+
+
+        //Attach onto the port
+        while (!foundPort) {
+            try{
+                reloadSocket = new Socket("127.0.0.1", port);
+                System.out.println("Connected!");
+                foundPort = true;
+            }catch(Exception e){
+                System.out.println("Can't connect to port: " + port);
+                port++;
+            }
+
+            if(port >= (portRangeStart + portRange)){
+                System.err.println("Unable to connect to the " + (shouldRestart ? "restart" : "reload")
+                        + " hook! Possibly the server is not running on the same machine.");
+                break;
+            }
+        }
+    }
+
+    private void copyFile(File from, File to){
+        FileInputStream fromStream = new FileInputStream(from);
+        FileOutputStream toStream = new FileOutputStream(to);
+
+        int bufferSize = 1024;
+
+        byte[] buffer = new byte[bufferSize]; //1 KB buffer
+        int readBytes = 0;
+
+        while(true){
+            readBytes = fromStream.read(buffer);
+
+            if(readBytes != -1){
+                toStream.write(buffer, 0, readBytes);
+                if(readBytes < bufferSize){
+                    break;
+                }
+            }else{
+                break;
+            }
+        }
+
+        toStream.close();
+        fromStream.close();
+    }
+}
