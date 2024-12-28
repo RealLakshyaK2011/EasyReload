@@ -1,3 +1,5 @@
+![EasyReload logo](EasyReloadIcon.png)
+
 ## What is this plugin?
 This plugin, simply put, automates the process of taking the built plugin and applying it to the plugin devlopment/testing server. 
 It is meant for bukkit/spigot plugin devlopers to automate the process of building and testing the binaries with ease.
