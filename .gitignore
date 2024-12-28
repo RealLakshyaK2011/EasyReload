@@ -4,6 +4,6 @@
 .vscode
 
 # Build and leftover
-/build
-/bin
+build
+bin
 .gradle
