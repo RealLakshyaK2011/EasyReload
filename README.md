@@ -1,6 +1,6 @@
 # EasyReload
 
-<img src="EasyReloadIcona.png" alt="drawing" style="width:200px;"/> 
+<img src="EasyReloadIcon.png" alt="drawing" style="width:200px;"/> 
 
 ## What is this plugin?
 This plugin, simply put, automates the process of taking the built plugin and applying it to the plugin devlopment/testing server. 
