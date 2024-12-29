@@ -1,8 +1,5 @@
 package net.chauhandevs.mod.easyreload.NetworkHook;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-
 import org.bukkit.Server;
 import org.bukkit.plugin.Plugin;
 
@@ -19,16 +16,7 @@ public class RestartHook extends SpecificHook{
         ChatMessageScheduler.scheduleMessageSend("Restarting the server to reload the plugins!");
         System.out.println("Restart Hook Triggered!");
 
-        try {
-            File script = new File("./start.bat");
-            if(!script.exists()) throw new FileNotFoundException("Unable to find the file: \'start.bat\' !");
-
-            Runtime.getRuntime().exec("cmd.exe /c \"start start.bat\"".split(" "));
-        } catch (Exception e) {
-            System.err.println("Unable to restart the server, reason: " + e.getMessage());
-        };
-
-        server.dispatchCommand(server.getConsoleSender(), "stop");
+        server.dispatchCommand(server.getConsoleSender(), "restart");
     }
 
     @Override
