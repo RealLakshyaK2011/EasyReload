@@ -10,3 +10,8 @@ bin
 
 # Java compiled class
 *.class
+
+# Packages
+*.zip
+*.rar
+*.jar
