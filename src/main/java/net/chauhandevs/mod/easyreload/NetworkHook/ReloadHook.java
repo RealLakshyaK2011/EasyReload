@@ -1,5 +1,6 @@
 package net.chauhandevs.mod.easyreload.NetworkHook;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.plugin.Plugin;
 
@@ -16,7 +17,7 @@ public class ReloadHook extends SpecificHook{
         ChatMessageScheduler.scheduleMessageSend("Reloading Plugins!");
         System.out.println("Reload Hook Triggered!");
 
-        server.dispatchCommand(server.getConsoleSender(), "reload");
+        server.reload();
     }
 
     @Override

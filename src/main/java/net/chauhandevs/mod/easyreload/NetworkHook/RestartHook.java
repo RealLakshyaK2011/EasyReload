@@ -1,5 +1,8 @@
 package net.chauhandevs.mod.easyreload.NetworkHook;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.bukkit.Server;
 import org.bukkit.plugin.Plugin;
 
@@ -16,7 +19,54 @@ public class RestartHook extends SpecificHook{
         ChatMessageScheduler.scheduleMessageSend("Restarting the server to reload the plugins!");
         System.out.println("Restart Hook Triggered!");
 
-        server.dispatchCommand(server.getConsoleSender(), "restart");
+        Runtime runtime = Runtime.getRuntime();
+        String startScript = "start.bat";
+        boolean isWindows = System.getProperty("os.name").toLowerCase().contains("win");
+
+        File script = new File(startScript);
+        boolean doesScriptExists = script.exists();
+
+        server.shutdown();
+
+        if(!doesScriptExists){
+            ChatMessageScheduler.scheduleMessageSend("Can't find the provided start script in configuration. Starting the server without pre-provided arguments!");
+        }
+
+        runtime.addShutdownHook(new Thread(new Runnable(){
+
+            @Override
+            public void run() {
+                if(doesScriptExists){
+                    if(isWindows){
+                        safeExec(runtime, "cmd.exe /c start " + startScript);
+                    }else{
+                        safeExec(runtime, "sh " + startScript);
+                    }
+                }else{
+                    String jarPath = "/" + server.getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
+                    jarPath = standardizePath(jarPath);
+
+                    safeExec(runtime, "java -jar " + jarPath);
+                }
+            }
+        }));
+    }
+
+    private String standardizePath(String path){
+        String step = path.replaceAll("[\\\\/]+", "/");
+        if(step.matches("^[\\\\/]+")){
+            step = step.replaceFirst("[\\\\/]+", "");
+        }
+
+        return step;
+    }
+
+    private void safeExec(Runtime r, String command){
+        try{
+            r.exec(command.split(" "));
+        }catch(IOException e){
+            System.out.println("Unknown error occurrec: " + e.getMessage());
+        }
     }
 
     @Override
