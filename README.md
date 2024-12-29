@@ -10,6 +10,8 @@ It is meant for bukkit/spigot plugin devlopers to automate the process of buildi
 1. Requires Gradle to be the build system of your project.
 2. Requires that the plugin testing/devlopment server be on the same machine.
 3. Any port being free in the range `12121 to 12125` and `12126 to 12130`.
+4. Make sure you can restart the server with the /restart command, otherwise the restart functionality will not work.
+5. More info on how to setup restart [here](HowToRestart.md)
 
 ## Installation:
 

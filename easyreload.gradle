@@ -34,6 +34,7 @@ class PostBuildAction{
     }
 
     public void performPostBuildAction(){
+        System.out.println("Using java version: " + System.getProperty("java.version"));
         System.out.println("Starting Post Build Tasks!");
         System.out.println("Server dir: " + serverDirectory);
         System.out.println("Built File dir: " + builtFile.getAbsolutePath());
