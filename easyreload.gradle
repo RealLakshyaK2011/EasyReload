@@ -36,6 +36,10 @@ class PostBuildAction{
     public void performPostBuildAction(){
         System.out.println("Using java version: " + System.getProperty("java.version"));
         System.out.println("Starting Post Build Tasks!");
+
+        if(!valueValidation()){
+            throw new IllegalArgumentException("Invalid path provided: " + serverDirectory);
+        }
         System.out.println("Server dir: " + serverDirectory);
         System.out.println("Built File dir: " + builtFile.getAbsolutePath());
 
@@ -50,6 +54,12 @@ class PostBuildAction{
         //Call the reload on the server
         System.out.println("Calling the " + (shouldRestart ? "restart" : "reload") + " on the server...");
         callReload();
+    }
+
+    private boolean valueValidation(){
+        String _1st = serverDirectory.replaceAll("[\\\\/]{2,}", "/");
+        String _2nd = serverDirectory.replaceAll("[\\/]", "/");
+        return _1st.equals(_2nd);
     }
 
     private static determineShouldRestart(String shouldRestart){
