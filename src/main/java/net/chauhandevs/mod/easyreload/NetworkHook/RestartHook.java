@@ -20,8 +20,8 @@ public class RestartHook extends SpecificHook{
         System.out.println("Restart Hook Triggered!");
 
         Runtime runtime = Runtime.getRuntime();
-        String startScript = "start.bat";
         boolean isWindows = System.getProperty("os.name").toLowerCase().contains("win");
+        String startScript = "start." + (isWindows ? "bat" : "sh");
 
         File script = new File(startScript);
         boolean doesScriptExists = script.exists();
