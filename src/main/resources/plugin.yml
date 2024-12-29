@@ -1,4 +1,4 @@
 name: EasyReload
 version: '1.0'
 main: net.chauhandevs.mod.easyreload.EasyReload
-api-version: '1.21'
+api-version: '1.14'
