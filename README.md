@@ -12,6 +12,10 @@ It is meant for bukkit/spigot plugin devlopers to automate the process of buildi
 3. Any port being free in the range `12121 to 12125` and `12126 to 12130`.
 4. The server start script, either batch `(.bat)` for windows or bash `.sh` for macOS/Linux should have the name `start.<extension>` otherwish the server might not restart as intended i.e. without any custom arguments provided to it.
 
+#### Version Specific:
+1. On version 1.0, the plugin depended on the `/reload` and `/restart` commands, and it only ran on Spigot. Make sure to setup `/restart` appropriately according to your enviroment.
+2. From version 1.1, all functionalities do work on bukkit servers too.
+
 ## Installation:
 
 1. Take the plugin JAR file and place it in your server's plugin directory.
