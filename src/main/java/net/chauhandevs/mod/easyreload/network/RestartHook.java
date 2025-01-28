@@ -1,4 +1,4 @@
-package net.chauhandevs.mod.easyreload.NetworkHook;
+package net.chauhandevs.mod.easyreload.network;
 
 import java.io.File;
 import java.io.IOException;

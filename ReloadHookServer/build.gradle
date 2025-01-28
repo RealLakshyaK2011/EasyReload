@@ -1,0 +1,21 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group = rootProject.group + '.reloadhookserver'
+version = rootProject.version
+
+String main_class = group + '.ReloadHookServer'
+
+application {
+    mainClass = main_class
+}
+
+jar{
+    manifest {
+        attributes(
+                "Main-Class": main_class
+        )
+    }
+}

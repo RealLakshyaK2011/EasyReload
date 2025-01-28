@@ -1,0 +1,35 @@
+package net.chauhandevs.mod.easyreload.network;
+
+import org.bukkit.Server;
+import org.bukkit.plugin.Plugin;
+
+import net.chauhandevs.mod.easyreload.ChatMessageScheduler;
+
+public class ReloadHook extends SpecificHook{
+
+    public ReloadHook(Server server, Plugin plugin, int portRangeStart){
+        super(server, plugin, portRangeStart);
+    }
+
+    @Override
+    public void onHookTriggered() {
+        ChatMessageScheduler.scheduleMessageSend("Reloading Plugins!");
+        ChatMessageScheduler.scheduleMessageSend("Current Working directory: " + System.getProperty("user.dir"));
+        System.out.println("Reload Hook Triggered!");
+
+        server.reload();
+    }
+
+    @Override
+    public void onHookOpened() {
+        System.out.println("Successfully opened a ReloadListenerHook on port: " + listnerPort);
+        ChatMessageScheduler.scheduleMessageSend("Current Working directory: " + System.getProperty("user.dir"));
+        ChatMessageScheduler.scheduleMessageSend("Successfully opened a ReloadListenerHook on port: " + listnerPort);
+    }
+
+    @Override
+    public void onHookOpenFailed() {
+        System.out.println("Unable to open ReloadListenerHook! Please check for issues!");
+        ChatMessageScheduler.scheduleMessageSend("Unable to open ReloadListenerHook! Please check for issues!");
+    }
+}
